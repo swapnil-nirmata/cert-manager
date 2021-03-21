@@ -1,0 +1,110 @@
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "Role"
+metadata:
+  namespace: "kube-system"
+  annotations: {}
+  name: "cert-manager-cainjector:leaderelection"
+  labels:
+    app: "cainjector"
+    app.kubernetes.io/name: "cainjector"
+    app.kubernetes.io/instance: "cert-manager"
+    app.kubernetes.io/component: "cainjector"
+rules:
+- apiGroups:
+  - ""
+  nonResourceURLs: []
+  resourceNames:
+  - "cert-manager-cainjector-leader-election"
+  - "cert-manager-cainjector-leader-election-core"
+  resources:
+  - "configmaps"
+  verbs:
+  - "get"
+  - "update"
+  - "patch"
+- apiGroups:
+  - ""
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "configmaps"
+  verbs:
+  - "create"
+
+---
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "Role"
+metadata:
+  namespace: "kube-system"
+  annotations: {}
+  name: "cert-manager:leaderelection"
+  labels:
+    app: "cert-manager"
+    app.kubernetes.io/name: "cert-manager"
+    app.kubernetes.io/instance: "cert-manager"
+    app.kubernetes.io/component: "controller"
+rules:
+- apiGroups:
+  - ""
+  nonResourceURLs: []
+  resourceNames:
+  - "cert-manager-controller"
+  resources:
+  - "configmaps"
+  verbs:
+  - "get"
+  - "update"
+  - "patch"
+- apiGroups:
+  - ""
+  nonResourceURLs: []
+  resourceNames: []
+  resources:
+  - "configmaps"
+  verbs:
+  - "create"
+
+---
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "RoleBinding"
+metadata:
+  namespace: "kube-system"
+  annotations: {}
+  name: "cert-manager:leaderelection"
+  labels:
+    app: "cert-manager"
+    app.kubernetes.io/name: "cert-manager"
+    app.kubernetes.io/instance: "cert-manager"
+    app.kubernetes.io/component: "controller"
+roleRef:
+  apiGroup: "rbac.authorization.k8s.io"
+  kind: "Role"
+  name: "cert-manager:leaderelection"
+subjects:
+- apiGroup: ""
+  kind: "ServiceAccount"
+  name: "cert-manager"
+  namespace: "cert-manager"
+
+---
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "RoleBinding"
+metadata:
+  namespace: "kube-system"
+  annotations: {}
+  name: "cert-manager-cainjector:leaderelection"
+  labels:
+    app: "cainjector"
+    app.kubernetes.io/name: "cainjector"
+    app.kubernetes.io/instance: "cert-manager"
+    app.kubernetes.io/component: "cainjector"
+roleRef:
+  apiGroup: "rbac.authorization.k8s.io"
+  kind: "Role"
+  name: "cert-manager-cainjector:leaderelection"
+subjects:
+- kind: "ServiceAccount"
+  name: "cert-manager-cainjector"
+  namespace: "cert-manager"
+
+---
