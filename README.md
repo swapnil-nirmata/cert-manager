@@ -1,6 +1,6 @@
 # cert-manager
 
-This README documents the cert-manager integration as Nirmata add-on on Kubernetes clusters.
+This README documents the cert-manager integration as an add-on that can be deployed on Kubernetes clusters using Nirmata Kubernetes Platform.
 
 ### What is the cert-manager?
 
